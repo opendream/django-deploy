@@ -1,0 +1,3 @@
+GitPython
+MySQL-python
+psycopg2
