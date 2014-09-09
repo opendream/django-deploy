@@ -238,8 +238,8 @@ server {
     if 'South' in freeze:
         subprocess.check_call(['%s/bin/python' % project_dir, '%s/manage.py' % source_dir, 'migrate'])
 
-    if not os.path.exists('%s/sitestatic/CACHE' % project_dir):
-        shutil.rmtree('%s/sitestatic/CACHE' % project_dir)
+    if os.path.isdir('%s/sitestatic/CACHE' % source_dir):
+        shutil.rmtree('%s/sitestatic/CACHE' % source_dir)
 
     subprocess.check_call(['%s/bin/python' % project_dir, '%s/manage.py' % source_dir, 'collectstatic'])
     subprocess.check_call(['service', 'uwsgi', 'restart'])
