@@ -121,7 +121,7 @@ def execute(settings, repo_name, op, git_url):
     settings_local_file = '%s/%s/settings_local.py' % (source_dir, repo_name)
     if not os.path.exists(settings_local_file):
 
-        f = open(settings_local_file, 'w')
+        f = open(settings_local_file, 'a')
         f.write('''
 DATABASES = {
     'default': {
@@ -238,10 +238,13 @@ server {
     if 'South' in freeze:
         subprocess.check_call(['%s/bin/python' % project_dir, '%s/manage.py' % source_dir, 'migrate'])
 
+    if not os.path.exists('%s/sitestatic/CACHE' % project_dir):
+        shutil.rmtree('%s/sitestatic/CACHE' % project_dir)
 
     subprocess.check_call(['%s/bin/python' % project_dir, '%s/manage.py' % source_dir, 'collectstatic'])
     subprocess.check_call(['service', 'uwsgi', 'restart'])
     subprocess.check_call(['service', 'nginx', 'restart'])
+    subprocess.check_call(['service', 'memcached', 'restart'])
 
     # ============================
     # Recheck symlink
